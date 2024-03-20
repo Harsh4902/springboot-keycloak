@@ -28,14 +28,11 @@ public class JWTAuthConverter implements Converter<Jwt, AbstractAuthenticationTo
       Map<String,Object> realmAccess = jwt.getClaim("realm_access");
       ObjectMapper mapper = new ObjectMapper();
       List<String> keyCloakRoles = mapper.convertValue(realmAccess.get("roles"),List.class);
-      System.out.println(keyCloakRoles);
       List<GrantedAuthority> roles = new ArrayList<>();
 
       for( String keyCloakRole : keyCloakRoles){
         roles.add(new SimpleGrantedAuthority("ROLE_" + keyCloakRole));
       }
-
-      System.out.println(roles);
       return roles;
     }
 

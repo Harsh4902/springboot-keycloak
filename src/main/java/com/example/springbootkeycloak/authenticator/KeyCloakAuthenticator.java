@@ -1,6 +1,7 @@
 package com.example.springbootkeycloak.authenticator;
 
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -78,7 +79,7 @@ public class KeyCloakAuthenticator {
   public KeyCloakAuthenticator build(){
     return this;
   }
-  public void authenticate(){
+  public ResponseEntity<AuthResponse> authenticate(){
 
     RestClient restClient = RestClient.builder().build();
 
@@ -89,15 +90,13 @@ public class KeyCloakAuthenticator {
     map.add("username",username);
     map.add("password",password);
 
-   AuthResponse response = restClient
+    return restClient
       .post()
       .uri("http://localhost:8080/realms/SpringSSO/protocol/openid-connect/token")
       .contentType(MediaType.APPLICATION_FORM_URLENCODED)
       .body(map)
       .retrieve()
-     .body(AuthResponse.class);
-
-    System.out.println(response);
+     .toEntity(AuthResponse.class);
   }
 
 }
