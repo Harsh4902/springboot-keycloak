@@ -26,7 +26,7 @@ public class SecurityConfig {
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(t -> {
         t
-          .requestMatchers("/login").permitAll()
+          .requestMatchers("/login","/authenticate").permitAll()
           .requestMatchers("/").hasRole("default-roles-springsso")
           .anyRequest().authenticated();
       })

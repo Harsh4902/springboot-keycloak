@@ -17,45 +17,10 @@ import java.net.URISyntaxException;
 
 
 @SpringBootApplication
-@RestController
 public class SpringbootKeycloakApplication {
 
   public static void main(String[] args) {
     SpringApplication.run(SpringbootKeycloakApplication.class, args);
-  }
-
-  @GetMapping("/")
-  public ResponseEntity hello() {
-    return new ResponseEntity("Welcome to home page :)", HttpStatus.OK);
-  }
-
-  @PostMapping("/login")
-  public void login(HttpServletRequest request, HttpServletResponse response){
-    try {
-      String token = authenticate(response,request.getParameter("username"),request.getParameter("password"));
-      response.sendRedirect("/?access_token="+token);
-    }
-    catch (Exception e){
-      System.err.println(e);
-    }
-  }
-
-  public String authenticate(HttpServletResponse response,String username,String password) throws URISyntaxException {
-
-    KeyCloakAuthenticator authenticator = KeyCloakAuthenticator.builder()
-      .tokenURL("http://localhost:8080/realms/SpringSSO/protocol/openid-connect/token")
-      .clientID("spring-keycloak")
-      .clientSecret("UVpm5yTahJ4dEcjt0uvdMcP5voQuLfuR")
-      .grantType("password")
-      .username(username)
-      .password(password)
-      .build();
-
-    ResponseEntity<AuthResponse> authResponse = authenticator.authenticate();
-
-    if(authResponse.getStatusCode() != HttpStatus.OK)
-      throw new BadCredentialsException("Bad Credentials.......");
-    return authResponse.getBody().access_token;
   }
 
 }
